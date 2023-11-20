@@ -35,3 +35,10 @@ class ProductsService:
         for product in payload['order']['order_details']:
             self.storage.decrement_stock(
                 product['product_id'], product['quantity'])
+
+
+    @rpc
+    def delete_product(self, product_id):
+        product = self.db.query(Product).get(product_id)
+        self.db.delete(product)
+        self.db.commit()
