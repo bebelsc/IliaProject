@@ -150,3 +150,23 @@ def test_handle_order_created(
     assert b'6' == product_one[b'in_stock']
     assert b'9' == product_two[b'in_stock']
     assert b'12' == product_three[b'in_stock']
+
+def test_delete_product(product, redis_client, service_container):
+
+    # Create a product
+    with entrypoint_hook(service_container, 'create') as create:
+        create(product)
+
+    # Make sure the product was created correctly
+    stored_product = redis_client.hgetall(f"products:{product['id']}")
+    assert product['id'] == stored_product[b'id'].decode('utf-8')
+
+    # delete the product
+    with entrypoint_hook(service_container, 'delete') as delete:
+        delete(product['id'])
+
+    # Verify if the product was deleted
+    deleted_product = redis_client.hgetall(f"products:{product['id']}")
+    assert not deleted_product  # the product should not exists
+
+

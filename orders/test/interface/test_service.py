@@ -94,3 +94,9 @@ def test_can_update_order(orders_rpc, order):
 def test_can_delete_order(orders_rpc, order, db_session):
     orders_rpc.delete_order(order.id)
     assert not db_session.query(Order).filter_by(id=order.id).count()
+
+def test_list_orders(orders_rpc, service_container):
+    with entrypoint_hook(service_container, 'list_orders') as list_orders:
+        orders = list_orders()
+
+    assert len(orders) > 0
