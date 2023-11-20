@@ -7,7 +7,7 @@
 execution:
 - concurrency: 1
   ramp-up: 1m
-  hold-for: 12h
+  hold-for: 1h
   scenario: nex
       
 scenarios:
